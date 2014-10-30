@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+# Stands up a Mock DNS Server to receive a dig request,
+# and outputs the request to stdout using Dnsruby::Message#to_s,
+# whose output differs somewhat from dig output, but has
+# the same information..
+
+require 'mock_dns_server'
+require 'pry'
+require 'hexdump'
+
+MDS = MockDnsServer
+
+def conditional_action
+  condition = MDS::PredicateFactory.new.always_true
+  action = MDS::ActionFactory.new.puts_and_echo
+  MDS::ConditionalAction.new(condition, action, 1)
+end
+
+def run
+  MDS::Server.with_new_server(host: 'localhost', port: 9999) do |server|
+    server.add_conditional_action(conditional_action)
+    server.start
+    puts "\nReflected message as per Dnsruby:\n\n"
+    output = `dig -p 9999 @localhost #{ARGV[0]}  2>&1`
+    puts "Reflected message as per dig:\n\n#{output}\n"
+    puts "Executing pry, press [Ctrl-D] to exit.\n\n"
+    binding.pry
+    raise output if $? != 0
+  end
+end
+
+def validate_input
+  if ARGV.empty?
+    puts "Syntax is show_dig_request \"[dig arguments]\" but without specifying host or port."
+    exit -1
+  end
+end
+
+validate_input
+run
