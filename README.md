@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/keithrbennett/mock_dns_server.svg)](https://travis-ci.org/keithrbennett/mock_dns_server)
+
 # MockDnsServer
 
 A mock DNS server that can be instructed to perform actions based on
