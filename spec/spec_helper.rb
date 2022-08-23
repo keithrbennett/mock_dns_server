@@ -10,6 +10,8 @@ $LOAD_PATH << File.join(File.dirname(__FILE__), '..', '..', 'lib')
 
 RSpec.configure do |config|
 
+  config.example_status_persistence_file_path = '.rspec_config_example_status_persistence_data'
+
   config.expect_with :rspec do |c|
     # disable (forbid) the `should` syntax; it's deprecated and will later be removed
     c.syntax = :expect

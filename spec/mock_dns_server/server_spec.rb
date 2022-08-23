@@ -252,6 +252,7 @@ module MockDnsServer
         message = Dnsruby::Message.new('a.com')
         wire_data = MessageHelper.tcp_message_package_for_write(message)
         client.write(wire_data)
+        sleep 0.001
         response_wire_data, _ = client.read(wire_data.size)
         expect(server.is_dns_packet?(response_wire_data, :udp)).to be true
 
