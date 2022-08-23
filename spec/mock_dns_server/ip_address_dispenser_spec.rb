@@ -18,12 +18,9 @@ describe IpAddressDispenser do
     expect(IpAddressDispenser.new('10.10.10.255').next(2).to_s).to eq('10.10.11.0')
   end
 
-  it "should does not raise an error and produces a valid IP address when called on 255.255.255.255" do
-    f = ->() do
-      new_address = IpAddressDispenser.new('255.255.255.255').next
-      IPAddr.new(new_address)
-    end
-    expect(f).not_to raise_error
+  it "should not raise an error and produces a valid IP address when called on 255.255.255.255" do
+    new_address = IpAddressDispenser.new('255.255.255.255').next
+    IPAddr.new(new_address)
   end
 
 end

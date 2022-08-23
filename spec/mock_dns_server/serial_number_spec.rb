@@ -9,11 +9,11 @@ describe SerialNumber do
   context 'initial value validation' do
 
     def verify_init_error(value)
-      expect(->() { SerialNumber.new(value) }).to raise_error
+      expect { SerialNumber.new(value) }.to raise_error(RuntimeError)
     end
 
     def verify_init_ok(value)
-      expect(->() { SerialNumber.new(value) }).not_to raise_error
+      expect { SerialNumber.new(value) }.not_to raise_error(RuntimeError)
     end
 
     specify '-1 is not ok' do
@@ -48,7 +48,7 @@ describe SerialNumber do
     end
 
     specify '0 <=> 0x8000_0000 should raise an error' do
-      expect(->() { SSS.new(0) <=> SSS.new(0x8000_0000) }).to raise_error
+      expect { SSS.new(0) <=> SSS.new(0x8000_0000) }.to raise_error(RuntimeError)
     end
 
     specify '0 should > 0x8000_0001' do
@@ -68,7 +68,7 @@ describe SerialNumber do
     end
 
     specify '0xB000_0000 <=> 0x3000_0000 should raise an error' do
-      expect(->() { SSS.new(0xB000_0000) <=> SSS.new(0x3000_0000) }).to raise_error
+      expect { SSS.new(0xB000_0000) <=> SSS.new(0x3000_0000) }.to raise_error
     end
 
     specify '0xB000_0000 should > 0x3000_0001' do
@@ -84,11 +84,11 @@ describe SerialNumber do
     end
 
     specify 'next of -1 to raise error' do
-      expect(->() { SSS.next_serial_value(-1) }).to raise_error
+      expect { SSS.next_serial_value(-1) }.to raise_error
     end
 
     specify 'next of 0x1_0000_0000 to raise error' do
-      expect(->() { SSS.next_serial_value(0x1_0000_0000) }).to raise_error
+      expect { SSS.next_serial_value(0x1_0000_0000) }.to raise_error
     end
 
     specify 'next of 0xFFFF_FFFF to be 0' do

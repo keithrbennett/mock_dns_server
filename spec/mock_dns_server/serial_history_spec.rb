@@ -114,15 +114,15 @@ describe SerialHistory do
     end
 
     it 'raises an error if the requested serial is too high' do
-      expect(->() { history.data_at_serial(1004) }).to raise_error
+      expect { history.data_at_serial(1004) }.to raise_error(RuntimeError)
     end
 
     it 'raises an error if the requested serial is too low' do
-      expect(->() { history.data_at_serial(1000) }).to raise_error
+      expect { history.data_at_serial(1000) }.to raise_error(RuntimeError)
     end
 
     it 'raises an error if the requested serial is nil' do
-      expect(->() { history.data_at_serial(nil) }).to raise_error
+      expect { history.data_at_serial(nil) }.to raise_error(RuntimeError)
     end
   end
 
@@ -218,13 +218,13 @@ describe SerialHistory do
 
     it 'raises an error if the new serial < the initial serial of the history' do
       history = SerialHistory.new('ruby-lang.org', 1001)
-      expect(->() { history.check_serial(999) }).to raise_error
+      expect { history.send(:check_new_serial, 999) }.to raise_error(RuntimeError)
     end
 
     it 'raises an error if the new serial is not higher than the highest serial of the history' do
       history = SerialHistory.new('ruby-lang.org', 1001)
       history.set_serial_additions(1002, rrs.first)
-      expect(->() { history.check_serial(1001) }).to raise_error
+      expect { history.send(:check_new_serial, 1001) }.to raise_error(RuntimeError)
     end
   end
 
@@ -355,7 +355,9 @@ describe SerialHistory do
   context 'handles 0xFFFF_FFFF rollover' do
     specify 'handles rollover from initial number' do
       h = SerialHistory.new('ruby-lang.org', 0xFFFF_FFFF)
-      expect(->() { h.set_serial_additions(0, rr('A', 'abc.ruby-lang.org', '1.1.1.2')) }).not_to raise_error
+      expect do
+        h.set_serial_additions(0, rr('A', 'abc.ruby-lang.org', '1.1.1.2'))
+      end.not_to raise_error(RuntimeError)
       expect(h.low_serial.value).to eq(0xFFFF_FFFF)
       expect(h.high_serial.value).to eq(0)
     end

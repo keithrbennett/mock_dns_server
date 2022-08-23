@@ -348,6 +348,8 @@ class SerialHistory
   # has a valid serial value in the context of the data already there.
   # Raises an error if the serial is bad, else does nothing.
   def check_new_serial(new_serial)
+    new_serial = SerialNumber.new(new_serial) unless new_serial.is_a?(SerialNumber)
+
     if new_serial < low_serial
       raise "New serial of #{new_serial} must not be lower than initial serial of #{low_serial}."
     elsif new_serial < high_serial

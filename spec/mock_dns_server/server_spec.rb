@@ -372,21 +372,20 @@ module MockDnsServer
 
 
     it 'can close multiple times without error' do
-      expect(->() { Server.with_new_server(options) do |server|
+      Server.with_new_server(options) do |server|
         server.close
         server.close
-      end }).not_to raise_error
+      end
     end
 
 
     it 'will not allow starting a server (and spawning a new thread) more than once' do
-      test_lambda = ->() do
+      expect do
         Server.with_new_server(options) do |server|
           server.start.wait_until_ready
           server.start
-        end
+        end.to raise_error(RuntimeError)
       end
-      expect(test_lambda).to raise_error
     end
 
 
